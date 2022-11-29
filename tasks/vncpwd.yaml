@@ -1,0 +1,26 @@
+---
+- name: Clone repo
+  ansible.builtin.git:
+    repo: "{{ repo_url }}"
+    dest: "{{ clone_path }}"
+  changed_when: false
+
+- name: Build vncpwd
+  community.general.make:
+    chdir: "{{ clone_path }}"
+  changed_when: false
+
+- name: Move vncpwd into $PATH
+  ansible.builtin.copy:
+    src: "{{ clone_path }}/vncpwd"
+    dest: "{{ tool_path }}"
+    mode: 0755
+    remote_src: yes
+    owner: root
+    group: root
+
+- name: Clean up
+  ansible.builtin.file:
+    path: "{{ clone_path }}"
+    state: absent
+  changed_when: false

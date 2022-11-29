@@ -7,12 +7,20 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) on Linux hosts.
 
 ## Requirements
 
-- Molecule dependencies
+- Python packages
 
   Install with:
 
   ```bash
-  pip3 install molecule-docker
+  python3.9 -m pip install --upgrade molecule-docker
+  ```
+
+- `community.general.make`
+
+  Install with:
+
+  ```bash
+  ansible-galaxy install collections -r requirements.yaml
   ```
 
 ## Role Variables
@@ -64,6 +72,7 @@ None.
 Make sure to run the following to develop locally:
 
 ```bash
+ansible-galaxy collection install -r requirements.yml
 PATH_TO_ROLE="${PWD}"
 ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc"
 ```

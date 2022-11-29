@@ -9,7 +9,7 @@ install_packages:
   - bash
   - ca-certificates
   # VSCode
-  - code-oss
+  # - code-oss
   - curl
   - dbus-x11
   - fonts-powerline

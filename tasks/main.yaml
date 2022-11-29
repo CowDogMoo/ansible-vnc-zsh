@@ -1,29 +1,25 @@
 ---
 - name: Include OS-Specific variables
-  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yaml"
 
 - name: Include OS-Specific tasks
-  ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}.yaml"
+
+- name: Install vncpwd
+  include: vncpwd.yaml
 
 - name: Create {{ vnc_users }}
   become: yes
   ansible.builtin.user:
-    name: "{{ item }}"
+    name: "{{ item.username }}"
     shell: /bin/zsh
   with_items: "{{ vnc_users }}"
-
-# TODO: Don't think we need this since we aren't going
-# to be doing ansible stuff in these.
-# - name: Install pip packages
-#   ansible.builtin.pip:
-#     name: "{{ pip_packages }}"
-#     state: present
 
 - name: Create .vnc dirs
   ansible.builtin.file:
     path: "/home/{{ item.username }}/.vnc"
     state: directory
-    mode: 700
+    mode: 0700
     owner: "{{ item.username }}"
     group: "{{ item.usergroup | default(item.username) }}"
   changed_when: false
@@ -32,9 +28,17 @@
 - name: Generate random passwords for each user in {{ vnc_users }} with vnc_pw.py
   vnc_pw:
     vnc_users: "{{ vnc_users }}"
+  register: updated_data
 
-- name: Set random password for {{ vnc_users }} if one isn't already set
-  shell: |
+- name: Update {{ vnc_users }} with the random generated passwords
+  ansible.builtin.set_fact:
+    vnc_users_pw: "{{ vnc_users_pw | default([]) + [item] }}"
+    # Make fact available to other roles
+    cacheable: yes
+  with_items: "{{ updated_data.result }}"
+
+- name: Set random password for {{ vnc_users_pw }} if one isn't already set
+  ansible.builtin.shell: |
     set -o pipefail
     if [[ ! -f /home/{{ item.username }}/.vnc/passwd ]]; then
       printf "{{ item.pass }}\n{{ item.pass }}\n\n" | vncpasswd /home/{{ item.username }}/.vnc/passwd
@@ -43,11 +47,11 @@
     chdir: "/home/{{ item.username }}/.vnc"
     # Make sure vncpasswd isn't overwritten - we don't want an ansible run to interrupt an interview
     creates: "/home/{{ item.username }}/.vnc/passwd"
-    executable: /bin/bash
-  with_items: "{{ vnc_users }}"
+    executable: /usr/bin/zsh
+  with_items: "{{ vnc_users_pw }}"
 
 - name: Set perms on vnc passwords
-  file:
+  ansible.builtin.file:
     path: "/home/{{ item.username }}/.vnc/passwd"
     owner: "{{ item.username }}"
     group: "{{ item.usergroup | default(item.username) }}"
@@ -86,8 +90,7 @@
   with_items: "{{ vnc_users }}"
 
 - name: Remove the zsh-installer.sh
-  ansible.builtin.file: 
+  ansible.builtin.file:
     path: /tmp/oh-my-zsh-installer.sh
     state: absent
-
 # END TODO

@@ -14,8 +14,7 @@
         vnc_num: 2
 
   roles:
-    - role: cowdogmoo.vnc
-    # "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
 
   post_tasks:
     - name: Confirm vnc passwd files exist for all vnc_users
