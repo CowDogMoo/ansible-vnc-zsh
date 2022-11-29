@@ -99,4 +99,5 @@ IMAGE_VERSION=latest packer build packer/ubuntu-vnc.pkr.hcl
 ```bash
 docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
   --rm -it -p 5901:5901 cowdogmoo/ansible-vnc
+  --cgroupns=host -p 5901:5901 cowdogmoo/ansible-vnc
 ```
