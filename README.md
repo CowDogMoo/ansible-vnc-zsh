@@ -91,7 +91,7 @@ molecule destroy
 ## Build docker image with Packer
 
 ```bash
-IMAGE_VERSION=latest packer build packer/ubuntu-vnc.pkr.hcl
+packer build packer/ubuntu-vnc.pkr.hcl
 ```
 
 ## Run container
@@ -101,3 +101,5 @@ docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
   --rm -it -p 5901:5901 cowdogmoo/ansible-vnc
   --cgroupns=host -p 5901:5901 cowdogmoo/ansible-vnc
 ```
+
+<!-- TODO: github actions -->
