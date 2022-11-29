@@ -1,0 +1,93 @@
+---
+- name: Include OS-Specific variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Include OS-Specific tasks
+  ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
+
+- name: Create {{ vnc_users }}
+  become: yes
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: /bin/zsh
+  with_items: "{{ vnc_users }}"
+
+# TODO: Don't think we need this since we aren't going
+# to be doing ansible stuff in these.
+# - name: Install pip packages
+#   ansible.builtin.pip:
+#     name: "{{ pip_packages }}"
+#     state: present
+
+- name: Create .vnc dirs
+  ansible.builtin.file:
+    path: "/home/{{ item.username }}/.vnc"
+    state: directory
+    mode: 700
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
+  changed_when: false
+  with_items: "{{ vnc_users }}"
+
+- name: Generate random passwords for each user in {{ vnc_users }} with vnc_pw.py
+  vnc_pw:
+    vnc_users: "{{ vnc_users }}"
+
+- name: Set random password for {{ vnc_users }} if one isn't already set
+  shell: |
+    set -o pipefail
+    if [[ ! -f /home/{{ item.username }}/.vnc/passwd ]]; then
+      printf "{{ item.pass }}\n{{ item.pass }}\n\n" | vncpasswd /home/{{ item.username }}/.vnc/passwd
+    fi
+  args:
+    chdir: "/home/{{ item.username }}/.vnc"
+    # Make sure vncpasswd isn't overwritten - we don't want an ansible run to interrupt an interview
+    creates: "/home/{{ item.username }}/.vnc/passwd"
+    executable: /bin/bash
+  with_items: "{{ vnc_users }}"
+
+- name: Set perms on vnc passwords
+  file:
+    path: "/home/{{ item.username }}/.vnc/passwd"
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
+    mode: 0700
+  with_items: "{{ vnc_users }}"
+
+- name: Configure systemd auto-start service
+  include: systemd.yaml
+
+# TODO: Should all go to a zshrc ansible role
+- name: Create base .zshrc files
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/templates/zshrc.zsh-template"
+    dest: "/home/{{ item.username }}.zshrc"
+    mode: 644
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
+  changed_when: false
+  with_items: "{{ vnc_users }}"
+
+- name: Download {{ var.omz_install_script_url }}
+  ansible.builtin.get_url:
+    url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh"
+    dest: "/tmp/zsh-installer.sh"
+    mode: 0755
+  when: var.omz_install_script_url is defined
+  changed_when: false
+
+- name: Run {{ var.omz_install_script_url }}
+  ansible.builtin.command: "/tmp/oh-my-zsh-installer.sh"
+  register: command_result
+  changed_when: "'is up-to-date' not in command_result.stdout"
+  when: var.omz_install_script_url is defined
+  args:
+    chdir: /tmp/
+  with_items: "{{ vnc_users }}"
+
+- name: Remove the zsh-installer.sh
+  ansible.builtin.file: 
+    path: /tmp/oh-my-zsh-installer.sh
+    state: absent
+
+# END TODO

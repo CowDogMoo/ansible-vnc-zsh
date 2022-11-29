@@ -1,0 +1,62 @@
+---
+- name: Enable persistent services for all users
+  shell: /bin/loginctl enable-linger {{ item.username }} # noqa 301 305
+  with_items: "{{ vnc_users }}"
+
+- name: Create systemd directories
+  file:
+    path: "/home/{{ item.username }}/.config/systemd/user"
+    state: directory
+    mode: 0644
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
+  with_items: "{{ vnc_users }}"
+
+- name: Check existence of per-user systemd service files
+  stat:
+    path: "/home/{{ item.username }}/.config/systemd/user/vncserver.service"
+  register: checksystemd
+  with_items: "{{ vnc_users }}"
+
+- name: Update per-user systemd service files
+  template:
+    src: vncserver.j2
+    dest: "/home/{{ item.username }}/.config/systemd/user/vncserver.service"
+    mode: 0644
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
+  when:
+    - not item.stat.exists
+  with_items: "{{ checksystemd.results }}"
+
+- name: Get uids of vnc_users
+  shell: "id -u {{ item.username }}"
+  # Run even in check mode, otherwise the playbook fails with --check.
+  check_mode: no 
+  changed_when: false
+  register: uids
+  with_items: "{{ vnc_users }}"
+
+- name: "Create uid_results"
+  set_fact:
+    uid_results: "{{ uid_results | default([]) + [item] }}"
+  with_items: "{{ uids.results | map(attribute='stdout') | list }}"
+
+- name: "Merge uids into vnc_users"
+  merge_list_dicts_into_list:
+    ls_dicts: "{{ vnc_users }}"
+    ls: "{{ uid_results }}"
+  register: vnc_users_uid
+
+- name: "Enable VNC service for all {{ vnc_users }}"
+  become: true
+  become_user: "{{ item.username }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: vncserver.service
+    scope: user
+    state: started
+  with_items: "{{ vnc_users_uid.result }}"

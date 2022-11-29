@@ -1,0 +1,32 @@
+---
+vnc_users:
+  - username: "ubuntu"
+    usergroup: "ubuntu"
+    # port 5901
+    vnc_num: 1
+
+install_packages:
+  - bash
+  - ca-certificates
+  # VSCode
+  - code-oss
+  - curl
+  - dbus-x11
+  - fonts-powerline
+  - git
+  - golang-go
+  - inetutils-ping
+  - less
+  - locales
+  - net-tools
+  - rsync
+  - sudo
+  - terminator
+  - tigervnc-standalone-server
+  - tigervnc-tools
+  - wget
+  - vim
+  - xfce4
+  - xfce4-goodies
+  - zsh
+  - zsh-autosuggestions

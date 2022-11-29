@@ -1,0 +1,9 @@
+---
+ansible_python_interpreter: /usr/bin/python3
+# pip_packages:
+#   - pip
+#   - wheel
+#   - setuptools
+#   - ansible
+omz_install_script_url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh"
+vnc_client_options: "-geometry 1920x1080 --localhost no"

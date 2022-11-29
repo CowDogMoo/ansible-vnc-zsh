@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+# Run molecule inside of a docker container
+driver:
+  name: docker
+
+platforms:
+  - name: ubuntu-vnc
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+  # - name: debian-vnc-workstation
+  #   platform: linux/arm64
+  #   image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian10}-ansible:latest"
+  #   command: ${MOLECULE_DOCKER_COMMAND:-""}
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   privileged: true
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}

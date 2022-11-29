@@ -1,0 +1,24 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    vnc_users:
+      - username: "ubuntu"
+        usergroup: "ubuntu"
+        # port 5901
+        vnc_num: 1
+      - username: "runner"
+        usergroup: "runner"
+        # port 5902
+        vnc_num: 2
+
+  roles:
+    - role: cowdogmoo.vnc
+    # "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+
+  post_tasks:
+    - name: Confirm vnc passwd files exist for all vnc_users
+      ansible.builtin.stat:
+        path: "/home/{{ item.username }}/.vnc/passwd"
+      with_items: "{{ vnc_users }}"
