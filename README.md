@@ -88,8 +88,15 @@ molecule converge
 molecule destroy
 ```
 
-## Run Packer
+## Build docker image with Packer
 
 ```bash
 IMAGE_VERSION=latest packer build packer/ubuntu-vnc.pkr.hcl
+```
+
+## Run container
+
+```bash
+docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+  --rm -it -p 5901:5901 cowdogmoo/ansible-vnc
 ```

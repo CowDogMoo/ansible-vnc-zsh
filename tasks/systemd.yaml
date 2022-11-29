@@ -15,7 +15,6 @@
 - name: Check existence of per-user systemd service files
   ansible.builtin.stat:
     path: "/home/{{ item.username }}/.config/systemd/user/vncserver.service"
-  register: checksystemd
   with_items: "{{ vnc_users }}"
 
 - name: Update per-user systemd service files
@@ -25,9 +24,7 @@
     mode: 0744
     owner: "{{ item.username }}"
     group: "{{ item.usergroup | default(item.username) }}"
-  when:
-    - not item.stat.exists
-  with_items: "{{ checksystemd.results }}"
+  with_items: "{{ vnc_users }}"
 
 - name: Get uids of {{ vnc_users }}
   ansible.builtin.command: "id -u {{ item.username }}"
