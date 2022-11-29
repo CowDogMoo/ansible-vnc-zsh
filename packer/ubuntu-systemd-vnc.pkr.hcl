@@ -1,13 +1,9 @@
-# ubuntu-vnc packer template
+# ubuntu-systemd-vnc packer template
 #
-# Used to create a docker image
+# Used to create a systemd-based docker image
 # that installs vnc and xfce on ubuntu.
 #
-# It is slower to build than the systemd
-# template because ansible needs to be
-# installed as part of the provisioning process.
-#
-# Expected build time: ~15 minutes
+# Expected build time: ~13 minutes
 
 # Define the plugin used by Packer
 packer {
@@ -21,12 +17,12 @@ packer {
 
 variable "docker_base_image" {
   type    = string
-  default = "ubuntu:22.04"
+  default = "geerlingguy/docker-ubuntu2204-ansible"
 }
 
-variable "docker_image_tag" {
+variable "docker_image_version" {
   type    = string
-  default = "${env("IMAGE_TAG")}"
+  default = "${env("IMAGE_VERSION")}"
 }
 
 variable "provision_dir" {
@@ -34,14 +30,18 @@ variable "provision_dir" {
   default = "/ansible-vnc"
 }
 
-source "docker" "vnc" {
+source "docker" "systemd-vnc" {
   commit      = true
   image   = "${var.docker_base_image}"
-  run_command = ["-d", "-i", "-t", "{{.Image}}"]
+  privileged = true
+  volumes = {
+    "/sys/fs/cgroup" = "/sys/fs/cgroup:rw"
+  }
+  run_command = ["-d", "-i", "-t", "--cgroupns=host", "{{.Image}}"]
 }
 
 build {
-  sources = ["source.docker.vnc"]
+  sources = ["source.docker.systemd-vnc"]
 
   provisioner "file" {
     destination = "${var.provision_dir}"
@@ -59,7 +59,7 @@ build {
 
   post-processors {
     post-processor "docker-tag" {
-      repository = "${var.docker_image_tag}"
+      repository = "cowdogmoo/ansible-systemd-vnc"
     }
   }
 }

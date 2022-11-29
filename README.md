@@ -91,15 +91,24 @@ molecule destroy
 ## Build docker image with Packer
 
 ```bash
-packer build packer/ubuntu-vnc.pkr.hcl
+# Without systemd
+IMAGE_TAG=cowdogmoo/ansible-vnc packer build packer/ubuntu-vnc.pkr.hcl
+
+# With systemd
+IMAGE_TAG=cowdogmoo/ansible-systemd-vnc packer build packer/ubuntu-systemd-vnc.pkr.hcl
 ```
 
 ## Run container
 
 ```bash
+# Without systemd
+docker run -d --rm -it -p 5901:5901 cowdogmoo/ansible-vnc \
+  -p 5901:5901 cowdogmoo/ansible-vnc
+
+# With systemd
 docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
   --rm -it -p 5901:5901 cowdogmoo/ansible-vnc
-  --cgroupns=host -p 5901:5901 cowdogmoo/ansible-vnc
+  --cgroupns=host -p 5901:5901 cowdogmoo/ansible-systemd-vnc
 ```
 
 <!-- TODO: github actions -->
