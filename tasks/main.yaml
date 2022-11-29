@@ -65,7 +65,7 @@
 - name: Create base .zshrc files
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/templates/zshrc.zsh-template"
-    dest: "/home/{{ item.username }}.zshrc"
+    dest: "/home/{{ item.username }}/.zshrc"
     mode: 644
     owner: "{{ item.username }}"
     group: "{{ item.usergroup | default(item.username) }}"
