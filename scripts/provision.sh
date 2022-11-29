@@ -18,7 +18,7 @@ run_provision_logic() {
 	PATH_TO_ROLE="/ansible-vnc"
 	ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc"
 	pushd "${PROVISION_DIR}"
-	ansible-galaxy collection install -r requirements.yml
+	ansible-galaxy collection install -r requirements.yaml
 	ansible-playbook \
 		--connection=local \
 		--inventory 127.0.0.1, \
