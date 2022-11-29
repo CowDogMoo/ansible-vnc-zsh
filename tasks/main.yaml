@@ -60,6 +60,14 @@
 
 - name: Configure systemd auto-start service
   include: systemd.yaml
+  when: var.setup_systemd is true
+
+- name: Start vncserver
+  ansible.builtin.command: "/usr/bin/vncserver :{{ item.vnc_num }} {{ var.vnc_client_options }}"
+  become: true
+  become_user: "{{ item.username }}"
+  when: var.setup_systemd is false
+  with_items: "{{ vnc_users }}"
 
 # TODO: Should all go to a zshrc ansible role
 - name: Create base .zshrc files

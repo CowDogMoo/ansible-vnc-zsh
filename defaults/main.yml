@@ -5,3 +5,4 @@ omz_install_script_url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/to
 repo_url: https://github.com/jeroennijhof/vncpwd.git
 tool_path: /usr/local/bin/vncpwd
 vnc_client_options: "-geometry 1920x1080 --localhost no"
+setup_systemd: false
