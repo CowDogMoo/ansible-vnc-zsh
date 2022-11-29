@@ -24,13 +24,22 @@ run_provision_logic() {
 		--inventory 127.0.0.1, \
 		--limit 127.0.0.1 workstation.yaml
 	popd
+
+	# Wait for ansible to finish running
+	while /usr/bin/pgrep ansible >/dev/null; do
+		echo "Ansible playbook is running"
+		sleep 1
+	done
+}
+
+cleanup() {
+	# Uninstall unneeded provisioning dependencies
+	/usr/bin/yes | python3 -m pip uninstall ansible
+
+	# Remove provisioning directory.
+	rm -rf /ansible-vnc
 }
 
 install_dependencies
 run_provision_logic
-
-# Wait for ansible to finish running
-while /usr/bin/pgrep ansible >/dev/null; do
-	echo "Ansible playbook is running"
-	sleep 1
-done
+cleanup

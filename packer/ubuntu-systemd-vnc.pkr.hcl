@@ -5,7 +5,7 @@
 #
 # Expected build time: ~13 minutes
 
-# Define the plugin used by Packer
+# Define the plugin(s) used by Packer.
 packer {
   required_plugins {
     docker = {
@@ -15,24 +15,39 @@ packer {
   }
 }
 
-variable "docker_base_image" {
+variable "base_image" {
   type    = string
+  description = "Base image."
   default = "geerlingguy/docker-ubuntu2204-ansible"
 }
 
-variable "docker_image_version" {
+variable "base_image_version" {
   type    = string
-  default = "${env("IMAGE_VERSION")}"
+  description = "Version of the base image."
+  default = "${env("BASE_IMAGE_VERSION")}"
+}
+
+variable "image_tag" {
+  type    = string
+  description = "Tag for the created image."
+  default = "${env("IMAGE_TAG")}"
+}
+
+variable "new_image_version" {
+  type = string
+  description = "Version for the created image."
+  default = "${env("NEW_IMAGE_VERSION")}"
 }
 
 variable "provision_dir" {
   type    = string
+  description = "Directory to use for provisioning."
   default = "/ansible-vnc"
 }
 
 source "docker" "systemd-vnc" {
   commit      = true
-  image   = "${var.docker_base_image}"
+  image   = "${var.base_image}:${var.base_image_version}"
   privileged = true
   volumes = {
     "/sys/fs/cgroup" = "/sys/fs/cgroup:rw"
@@ -53,13 +68,10 @@ build {
     script           = "scripts/provision.sh"
   }
 
-  provisioner "shell" {
-    script           = "scripts/cleanup.sh"
-  }
-
   post-processors {
     post-processor "docker-tag" {
-      repository = "cowdogmoo/ansible-systemd-vnc"
+      repository = "${var.image_tag}"
+      tag = ["${var.new_image_version}"]
     }
   }
 }

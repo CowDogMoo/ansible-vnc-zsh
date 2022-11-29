@@ -9,7 +9,7 @@
 #
 # Expected build time: ~15 minutes
 
-# Define the plugin used by Packer
+# Define the plugin(s) used by Packer.
 packer {
   required_plugins {
     docker = {
@@ -19,24 +19,43 @@ packer {
   }
 }
 
-variable "docker_base_image" {
+variable "base_image" {
   type    = string
-  default = "ubuntu:22.04"
+  description = "Base image."
+  default = "ubuntu"
 }
 
-variable "docker_image_tag" {
+variable "base_image_version" {
   type    = string
+  description = "Version of the base image."
+  default = "${env("BASE_IMAGE_VERSION")}"
+}
+
+variable "image_tag" {
+  type    = string
+  description = "Tag for the created image."
   default = "${env("IMAGE_TAG")}"
+}
+
+variable "new_image_version" {
+  type = string
+  description = "Version for the created image."
+  default = "${env("NEW_IMAGE_VERSION")}"
 }
 
 variable "provision_dir" {
   type    = string
+  description = "Directory to use for provisioning."
   default = "/ansible-vnc"
 }
 
 source "docker" "vnc" {
   commit      = true
-  image   = "${var.docker_base_image}"
+  image   = "${var.base_image}:${var.base_image_version}"
+  changes = [
+    "ENTRYPOINT [\"${var.provision_dir}/scripts/provision.sh\"]",
+    "CMD [\"zsh\"]"
+  ]
   run_command = ["-d", "-i", "-t", "{{.Image}}"]
 }
 
@@ -53,13 +72,10 @@ build {
     script           = "scripts/provision.sh"
   }
 
-  provisioner "shell" {
-    script           = "scripts/cleanup.sh"
-  }
-
   post-processors {
     post-processor "docker-tag" {
-      repository = "${var.docker_image_tag}"
+      repository = "${var.image_tag}"
+      tag = ["${var.new_image_version}"]
     }
   }
 }
