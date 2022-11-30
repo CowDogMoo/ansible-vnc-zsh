@@ -92,23 +92,37 @@ molecule destroy
 
 ```bash
 # Without systemd
-IMAGE_TAG=cowdogmoo/ansible-vnc packer build packer/ubuntu-vnc.pkr.hcl
+# IMAGE_TAG=cowdogmoo/ansible-vnc packer build packer/ubuntu-vnc.pkr.hcl
+IMAGE_TAG=cowdogmoo/ansible-vnc
+BASE_IMAGE_VERSION=latest
+NEW_IMAGE_VERSION=latest
+packer build packer/ubuntu-vnc.pkr.hcl
 
 # With systemd
-IMAGE_TAG=cowdogmoo/ansible-systemd-vnc packer build packer/ubuntu-systemd-vnc.pkr.hcl
+# IMAGE_TAG=cowdogmoo/ansible-systemd-vnc packer build packer/ubuntu-systemd-vnc.pkr.hcl
+IMAGE_TAG=cowdogmoo/ansible-systemd-vnc
+BASE_IMAGE_VERSION=latest
+NEW_IMAGE_VERSION=latest
+packer build packer/ubuntu-systemd-vnc.pkr.hcl
 ```
 
 ## Run container
 
 ```bash
 # Without systemd
-docker run -d --rm -it -p 5901:5901 cowdogmoo/ansible-vnc \
-  -p 5901:5901 cowdogmoo/ansible-vnc
+docker run -d --rm -it -p 5901:5901 cowdogmoo/ansible-vnc zsh
 
 # With systemd
 docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
-  --rm -it -p 5901:5901 cowdogmoo/ansible-vnc
-  --cgroupns=host -p 5901:5901 cowdogmoo/ansible-systemd-vnc
+  --rm -it -p 5901:5901 --cgroupns=host cowdogmoo/ansible-systemd-vnc
+```
+
+## Get vnc password
+
+```bash
+docker exec -it infallible_lumiere zsh -c '/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd'
 ```
 
 <!-- TODO: github actions -->
+<!-- TODO: ensure that vnc works on the base image -->
+<!-- Figure out how to push to github container registry -->

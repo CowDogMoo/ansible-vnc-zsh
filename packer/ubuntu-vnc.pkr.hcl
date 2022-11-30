@@ -1,13 +1,15 @@
 # ubuntu-vnc packer template
 #
-# Used to create a docker image
-# that installs vnc and xfce on ubuntu.
+# Author: Jayson Grace <Jayson Grace <jayson.e.grace@gmail.com>
 #
-# It is slower to build than the systemd
-# template because ansible needs to be
-# installed as part of the provisioning process.
+# Description: Create a docker image
+# that installs vnc and xfce on Ubuntu.
 #
-# Expected build time: ~15 minutes
+# It is slower to build than its systemd counterpart
+# because the systemd image already has
+# ansible installed.
+#
+# Expected build time: ~13 minutes
 
 # Define the plugin(s) used by Packer.
 packer {
@@ -53,7 +55,7 @@ source "docker" "vnc" {
   commit      = true
   image   = "${var.base_image}:${var.base_image_version}"
   changes = [
-    "ENTRYPOINT [\"${var.provision_dir}/scripts/provision.sh\"]",
+    "ENTRYPOINT ${var.provision_dir}/entrypoint/docker-entrypoint.sh",
     "CMD [\"zsh\"]"
   ]
   run_command = ["-d", "-i", "-t", "{{.Image}}"]
@@ -63,7 +65,7 @@ build {
   sources = ["source.docker.vnc"]
 
   provisioner "file" {
-    destination = "${var.provision_dir}"
+    destination = "${var.provision_dir}/"
     source      = "${path.cwd}"
   }
 

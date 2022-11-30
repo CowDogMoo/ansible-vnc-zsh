@@ -74,31 +74,31 @@
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/templates/zshrc.zsh-template"
     dest: "/home/{{ item.username }}/.zshrc"
-    mode: 644
+    mode: 0755
     owner: "{{ item.username }}"
     group: "{{ item.usergroup | default(item.username) }}"
   changed_when: false
   with_items: "{{ vnc_users }}"
 
-- name: Download {{ var.omz_install_script_url }}
+- name: Download {{ omz_install_script_url }}
   ansible.builtin.get_url:
-    url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh"
-    dest: "/tmp/zsh-installer.sh"
+    url: "{{ var.omz_install_script_url }}"
+    dest: "/home/{{ item.username }}/zsh-installer.sh"
     mode: 0755
   when: var.omz_install_script_url is defined
   changed_when: false
+  with_items: "{{ vnc_users }}"
 
-- name: Run {{ var.omz_install_script_url }}
-  ansible.builtin.command: "/tmp/oh-my-zsh-installer.sh"
-  register: command_result
-  changed_when: "'is up-to-date' not in command_result.stdout"
+- name: Run {{ omz_install_script_url }}
+  ansible.builtin.command: "bash /home/{{ item.username }}/zsh-installer.sh"
+  changed_when: false
   when: var.omz_install_script_url is defined
-  args:
-    chdir: /tmp/
   with_items: "{{ vnc_users }}"
 
 - name: Remove the zsh-installer.sh
   ansible.builtin.file:
-    path: /tmp/oh-my-zsh-installer.sh
+    path: "/home/{{ item.username }}/zsh-installer.sh"
     state: absent
+  when: var.omz_install_script_url is defined
+  with_items: "{{ vnc_users }}"
 # END TODO
