@@ -12,6 +12,7 @@
         usergroup: "runner"
         # port 5902
         vnc_num: 2
+    setup_systemd: true
 
   roles:
     - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"

@@ -3,6 +3,8 @@
 # Provision logic for docker image creation.
 set -ex
 
+export PATH_TO_ROLE="/ansible-vnc"
+
 install_dependencies() {
 	# Get latest packages and install aptitude
 	apt update -y 2>/dev/null | grep packages | cut -d '.' -f 1
@@ -15,13 +17,12 @@ install_dependencies() {
 
 run_provision_logic() {
 	mkdir -p "${HOME}/.ansible/roles"
-	PATH_TO_ROLE="/ansible-vnc"
 	ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc"
 	pushd "${PROVISION_DIR}"
-	ansible-galaxy collection install -r requirements.yaml
 	ansible-playbook \
 		--connection=local \
 		--inventory 127.0.0.1, \
+		-e "setup_systemd=${SETUP_SYSTEMD}" \
 		--limit 127.0.0.1 workstation.yaml
 	popd
 
@@ -37,9 +38,9 @@ cleanup() {
 	/usr/bin/yes | python3 -m pip uninstall ansible
 
 	# Remove provisioning directory.
-	rm -rf /ansible-vnc
+	rm -rf "${PATH_TO_ROLE}"
 }
 
 install_dependencies
 run_provision_logic
-cleanup
+# cleanup

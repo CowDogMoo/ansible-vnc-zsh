@@ -48,6 +48,8 @@
     # Make sure vncpasswd isn't overwritten - we don't want an ansible run to interrupt an interview
     creates: "/home/{{ item.username }}/.vnc/passwd"
     executable: /usr/bin/zsh
+  become: true
+  become_user: "{{ item.username }}"
   with_items: "{{ vnc_users_pw }}"
 
 - name: Set perms on vnc passwords
@@ -85,20 +87,23 @@
     url: "{{ var.omz_install_script_url }}"
     dest: "/home/{{ item.username }}/zsh-installer.sh"
     mode: 0755
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
   when: var.omz_install_script_url is defined
   changed_when: false
   with_items: "{{ vnc_users }}"
 
 - name: Run {{ omz_install_script_url }}
   ansible.builtin.command: "bash /home/{{ item.username }}/zsh-installer.sh"
+  become: true
+  become_user: "{{ item.username }}"
   changed_when: false
   when: var.omz_install_script_url is defined
   with_items: "{{ vnc_users }}"
-
-- name: Remove the zsh-installer.sh
-  ansible.builtin.file:
-    path: "/home/{{ item.username }}/zsh-installer.sh"
-    state: absent
-  when: var.omz_install_script_url is defined
-  with_items: "{{ vnc_users }}"
+# - name: Remove the zsh-installer.sh
+#   ansible.builtin.file:
+#     path: "/home/{{ item.username }}/zsh-installer.sh"
+#     state: absent
+#   when: var.omz_install_script_url is defined
+#   with_items: "{{ vnc_users }}"
 # END TODO
