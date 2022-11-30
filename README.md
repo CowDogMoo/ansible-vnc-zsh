@@ -93,16 +93,16 @@ molecule destroy
 ```bash
 # Without systemd
 # IMAGE_TAG=cowdogmoo/ansible-vnc packer build packer/ubuntu-vnc.pkr.hcl
-IMAGE_TAG=cowdogmoo/ansible-vnc
-BASE_IMAGE_VERSION=latest
-NEW_IMAGE_VERSION=latest
+IMAGE_TAG=cowdogmoo/ansible-vnc \
+BASE_IMAGE_VERSION=latest \
+NEW_IMAGE_VERSION=latest \
 packer build packer/ubuntu-vnc.pkr.hcl
 
 # With systemd
 # IMAGE_TAG=cowdogmoo/ansible-systemd-vnc packer build packer/ubuntu-systemd-vnc.pkr.hcl
-IMAGE_TAG=cowdogmoo/ansible-systemd-vnc
-BASE_IMAGE_VERSION=latest
-NEW_IMAGE_VERSION=latest
+IMAGE_TAG=cowdogmoo/ansible-systemd-vnc \
+BASE_IMAGE_VERSION=latest \
+NEW_IMAGE_VERSION=latest \
 packer build packer/ubuntu-systemd-vnc.pkr.hcl
 ```
 
@@ -110,7 +110,7 @@ packer build packer/ubuntu-systemd-vnc.pkr.hcl
 
 ```bash
 # Without systemd
-docker run -d --rm -it -p 5901:5901 cowdogmoo/ansible-vnc zsh
+docker run -dit --rm -p 5901:5901 cowdogmoo/ansible-vnc
 
 # With systemd
 docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
