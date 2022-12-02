@@ -9,7 +9,7 @@
 # because the systemd image already has
 # ansible installed.
 #
-# Expected build time: ~13 minutes
+# Expected build time: ~12 minutes
 
 # Define the plugin(s) used by Packer.
 packer {

@@ -18,6 +18,7 @@ install_dependencies() {
 run_provision_logic() {
 	mkdir -p "${HOME}/.ansible/roles"
 	ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc"
+
 	pushd "${PROVISION_DIR}"
 	ansible-playbook \
 		--connection=local \
@@ -34,14 +35,10 @@ run_provision_logic() {
 }
 
 cleanup() {
-	# Uninstall unneeded provisioning dependencies
-	/usr/bin/yes | python3 -m pip uninstall ansible
-
 	# Remove provisioning directory.
 	rm -rf "${PATH_TO_ROLE}"
-	rm -rf /packer-files
 }
 
 install_dependencies
 run_provision_logic
-cleanup
+# cleanup
