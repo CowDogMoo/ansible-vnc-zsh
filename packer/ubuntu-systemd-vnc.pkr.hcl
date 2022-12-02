@@ -1,9 +1,11 @@
 # ubuntu-systemd-vnc packer template
 #
-# Used to create a systemd-based docker image
-# that installs vnc and xfce on ubuntu.
+# Author: Jayson Grace <Jayson Grace <jayson.e.grace@gmail.com>
 #
-# Expected build time: ~13 minutes
+# Description: Create a systemd-based docker image
+# that installs vnc and xfce on Ubuntu.
+#
+# Expected build time: ~10 minutes
 
 # Define the plugin(s) used by Packer.
 packer {
@@ -27,6 +29,12 @@ variable "base_image_version" {
   default = "${env("BASE_IMAGE_VERSION")}"
 }
 
+variable "container_user" {
+  type    = string
+  description = "Default user for a new container."
+  default = "ubuntu"
+}
+
 variable "image_tag" {
   type    = string
   description = "Tag for the created image."
@@ -45,6 +53,18 @@ variable "provision_dir" {
   default = "/ansible-vnc"
 }
 
+variable "setup_systemd" {
+  type    = string
+  description = "Setup vnc service with systemd."
+  default = true
+}
+
+variable "workdir" {
+  type    = string
+  description = "Working directory for a new container."
+  default = "/home/ubuntu"
+}
+
 source "docker" "systemd-vnc" {
   commit      = true
   image   = "${var.base_image}:${var.base_image_version}"
@@ -52,6 +72,9 @@ source "docker" "systemd-vnc" {
   volumes = {
     "/sys/fs/cgroup" = "/sys/fs/cgroup:rw"
   }
+  changes = [
+    "WORKDIR ${var.workdir}",
+  ]
   run_command = ["-d", "-i", "-t", "--cgroupns=host", "{{.Image}}"]
 }
 
@@ -59,12 +82,15 @@ build {
   sources = ["source.docker.systemd-vnc"]
 
   provisioner "file" {
-    destination = "${var.provision_dir}"
+    destination = "${var.provision_dir}/"
     source      = "${path.cwd}"
   }
 
   provisioner "shell" {
-    environment_vars = ["PROVISION_DIR=${var.provision_dir}"]
+    environment_vars = [
+      "PROVISION_DIR=${var.provision_dir}",
+      "SETUP_SYSTEMD=${var.setup_systemd}",
+      ]
     script           = "scripts/provision.sh"
   }
 

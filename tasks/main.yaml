@@ -69,48 +69,15 @@
 
 - name: Configure systemd auto-start service
   include: systemd.yaml
-  when: setup_systemd is false
-  with_items: "{{ vnc_users }}"
+  when: setup_systemd|bool
 
-# BEGIN TODO: Break into zsh ansible role
-- name: Download oh-my-zsh install script for vnc_users
-  ansible.builtin.get_url:
-    url: "{{ omz_install_script_url }}"
-    dest: "/home/{{ item.username }}/zsh-installer.sh"
-    mode: 0755
-    owner: "{{ item.username }}"
-    group: "{{ item.usergroup | default(item.username) }}"
+- name: Install omz for vnc_users
+  include: omz.yaml
   when: omz_install_script_url is defined
-  changed_when: false
-  with_items: "{{ vnc_users }}"
-
-- name: Run oh-my-zsh install script for vnc_users
-  ansible.builtin.command: "bash /home/{{ item.username }}/zsh-installer.sh"
-  become: true
-  become_user: "{{ item.username }}"
-  changed_when: false
-  when: omz_install_script_url is defined
-  with_items: "{{ vnc_users }}"
-
-- name: Remove the zsh-installer.sh
-  ansible.builtin.file:
-    path: "/home/{{ item.username }}/zsh-installer.sh"
-    state: absent
-  when: omz_install_script_url is defined
-  with_items: "{{ vnc_users }}"
-
-- name: Create per-user $HOME/.zshrc files
-  ansible.builtin.template:
-    src: zshrc.j2
-    dest: "/home/{{ item.username }}/.zshrc"
-    mode: 0744
-    owner: "{{ item.username }}"
-    group: "{{ item.usergroup | default(item.username) }}"
-  with_items: "{{ vnc_users }}"
-# END TODO
 
 - name: Create docker-entrypoint.sh
   ansible.builtin.template:
     src: docker-entrypoint.sh.j2
     dest: "/run/docker-entrypoint.sh"
     mode: 0755
+  when: not setup_systemd|bool
