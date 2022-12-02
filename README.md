@@ -125,5 +125,3 @@ docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
 ```bash
 docker exec -it $CONTAINER zsh -c '/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd'
 ```
-
-<!-- TODO: Figure out how to push to github container registry -->
