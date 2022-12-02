@@ -51,6 +51,7 @@ Users to configure `vnc` for.
 vnc_users:
   - username: "ubuntu"
     usergroup: "ubuntu"
+    sudo: true
     # port 5901
     vnc_num: 1
 ```
@@ -92,14 +93,12 @@ molecule destroy
 
 ```bash
 # Without systemd
-# IMAGE_TAG=cowdogmoo/ansible-vnc packer build packer/ubuntu-vnc.pkr.hcl
 IMAGE_TAG=cowdogmoo/ansible-vnc \
 BASE_IMAGE_VERSION=latest \
 NEW_IMAGE_VERSION=latest \
 packer build packer/ubuntu-vnc.pkr.hcl
 
 # With systemd
-# IMAGE_TAG=cowdogmoo/ansible-systemd-vnc packer build packer/ubuntu-systemd-vnc.pkr.hcl
 IMAGE_TAG=cowdogmoo/ansible-systemd-vnc \
 BASE_IMAGE_VERSION=latest \
 NEW_IMAGE_VERSION=latest \
@@ -126,5 +125,4 @@ docker exec -it $CONTAINER zsh -c '/usr/local/bin/vncpwd /home/ubuntu/.vnc/passw
 ```
 
 <!-- TODO: github actions -->
-<!-- TODO: ensure that vnc works on the base image -->
-<!-- Figure out how to push to github container registry -->
+<!-- TODO: Figure out how to push to github container registry -->
