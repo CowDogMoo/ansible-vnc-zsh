@@ -33,6 +33,12 @@ variable "base_image_version" {
   default = "${env("BASE_IMAGE_VERSION")}"
 }
 
+variable "container_user" {
+  type    = string
+  description = "Default user for a new container."
+  default = "ubuntu"
+}
+
 variable "image_tag" {
   type    = string
   description = "Tag for the created image."
@@ -51,12 +57,25 @@ variable "provision_dir" {
   default = "/ansible-vnc"
 }
 
+variable "setup_systemd" {
+  type    = bool
+  description = "Setup vnc service with systemd."
+  default = false
+}
+
+variable "workdir" {
+  type    = string
+  description = "Working directory for a new container."
+  default = "/home/ubuntu"
+}
+
 source "docker" "vnc" {
   commit      = true
   image   = "${var.base_image}:${var.base_image_version}"
   changes = [
-    "ENTRYPOINT ${var.provision_dir}/entrypoint/docker-entrypoint.sh",
-    "CMD [\"zsh\"]"
+    "USER ${var.container_user}",
+    "WORKDIR ${var.workdir}",
+    "ENTRYPOINT /run/docker-entrypoint.sh ; zsh",
   ]
   run_command = ["-d", "-i", "-t", "{{.Image}}"]
 }
@@ -70,7 +89,10 @@ build {
   }
 
   provisioner "shell" {
-    environment_vars = ["PROVISION_DIR=${var.provision_dir}"]
+    environment_vars = [
+      "PROVISION_DIR=${var.provision_dir}",
+      "SETUP_SYSTEMD=${var.setup_systemd}",
+      ]
     script           = "scripts/provision.sh"
   }
 

@@ -39,8 +39,9 @@ cleanup() {
 
 	# Remove provisioning directory.
 	rm -rf "${PATH_TO_ROLE}"
+	rm -rf /packer-files
 }
 
 install_dependencies
 run_provision_logic
-# cleanup
+cleanup

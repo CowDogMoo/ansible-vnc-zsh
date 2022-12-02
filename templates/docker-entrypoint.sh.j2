@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+# Author: Jayson Grace <Jayson Grace <jayson.e.grace@gmail.com>
+# docker-entrypoint.sh for docker image creation.
+set -x
+
+# Only run if systemd is not in use.
+if [[ {{ setup_systemd }} == false ]]; then
+	. /home/ubuntu/.zshrc
+    start_vnc
+fi
+
+exec "$@"

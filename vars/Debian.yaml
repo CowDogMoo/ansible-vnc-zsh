@@ -2,14 +2,13 @@
 vnc_users:
   - username: "ubuntu"
     usergroup: "ubuntu"
+    sudo: true
     # port 5901
     vnc_num: 1
 
 install_packages:
   - bash
   - ca-certificates
-  # VSCode
-  # - code-oss
   - curl
   - dbus-x11
   - fonts-powerline

@@ -110,7 +110,9 @@ packer build packer/ubuntu-systemd-vnc.pkr.hcl
 
 ```bash
 # Without systemd
-docker run -dit --rm -p 5901:5901 cowdogmoo/ansible-vnc
+docker run -dit --rm -p 5901:5901 cowdogmoo/ansible-vnc \
+&& CONTAINER=$(docker ps | awk -F '  ' '{print $7}' | xargs) \
+&& echo $CONTAINER && docker exec -it $CONTAINER zsh
 
 # With systemd
 docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
@@ -120,7 +122,7 @@ docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
 ## Get vnc password
 
 ```bash
-docker exec -it infallible_lumiere zsh -c '/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd'
+docker exec -it $CONTAINER zsh -c '/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd'
 ```
 
 <!-- TODO: github actions -->

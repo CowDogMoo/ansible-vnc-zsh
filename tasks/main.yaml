@@ -15,6 +15,16 @@
     shell: /bin/zsh
   with_items: "{{ vnc_users }}"
 
+- name: Give applicable {{ vnc_users }} sudoers access
+  become: yes
+  ansible.builtin.blockinfile:
+    path: /etc/sudoers
+    insertafter: "root    ALL=(ALL)       ALL"
+    block: "{{ item.username }} ALL=(ALL:ALL) NOPASSWD:ALL"
+  when:
+    - item.sudo
+  with_items: "{{ vnc_users }}"
+
 - name: Create .vnc dirs
   ansible.builtin.file:
     path: "/home/{{ item.username }}/.vnc"
@@ -33,8 +43,6 @@
 - name: Update {{ vnc_users }} with the random generated passwords
   ansible.builtin.set_fact:
     vnc_users_pw: "{{ vnc_users_pw | default([]) + [item] }}"
-    # Make fact available to other roles
-    cacheable: yes
   with_items: "{{ updated_data.result }}"
 
 - name: Set random password for {{ vnc_users_pw }} if one isn't already set
@@ -45,9 +53,8 @@
     fi
   args:
     chdir: "/home/{{ item.username }}/.vnc"
-    # Make sure vncpasswd isn't overwritten - we don't want an ansible run to interrupt an interview
     creates: "/home/{{ item.username }}/.vnc/passwd"
-    executable: /usr/bin/zsh
+    executable: /bin/zsh
   become: true
   become_user: "{{ item.username }}"
   with_items: "{{ vnc_users_pw }}"
@@ -62,48 +69,48 @@
 
 - name: Configure systemd auto-start service
   include: systemd.yaml
-  when: var.setup_systemd is true
-
-- name: Start vncserver
-  ansible.builtin.command: "/usr/bin/vncserver :{{ item.vnc_num }} {{ var.vnc_client_options }}"
-  become: true
-  become_user: "{{ item.username }}"
-  when: var.setup_systemd is false
+  when: setup_systemd is false
   with_items: "{{ vnc_users }}"
 
-# TODO: Should all go to a zshrc ansible role
-- name: Create base .zshrc files
+# BEGIN TODO: Break into zsh ansible role
+- name: Download oh-my-zsh install script for vnc_users
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/templates/zshrc.zsh-template"
-    dest: "/home/{{ item.username }}/.zshrc"
-    mode: 0755
-    owner: "{{ item.username }}"
-    group: "{{ item.usergroup | default(item.username) }}"
-  changed_when: false
-  with_items: "{{ vnc_users }}"
-
-- name: Download {{ omz_install_script_url }}
-  ansible.builtin.get_url:
-    url: "{{ var.omz_install_script_url }}"
+    url: "{{ omz_install_script_url }}"
     dest: "/home/{{ item.username }}/zsh-installer.sh"
     mode: 0755
     owner: "{{ item.username }}"
     group: "{{ item.usergroup | default(item.username) }}"
-  when: var.omz_install_script_url is defined
+  when: omz_install_script_url is defined
   changed_when: false
   with_items: "{{ vnc_users }}"
 
-- name: Run {{ omz_install_script_url }}
+- name: Run oh-my-zsh install script for vnc_users
   ansible.builtin.command: "bash /home/{{ item.username }}/zsh-installer.sh"
   become: true
   become_user: "{{ item.username }}"
   changed_when: false
-  when: var.omz_install_script_url is defined
+  when: omz_install_script_url is defined
   with_items: "{{ vnc_users }}"
-# - name: Remove the zsh-installer.sh
-#   ansible.builtin.file:
-#     path: "/home/{{ item.username }}/zsh-installer.sh"
-#     state: absent
-#   when: var.omz_install_script_url is defined
-#   with_items: "{{ vnc_users }}"
+
+- name: Remove the zsh-installer.sh
+  ansible.builtin.file:
+    path: "/home/{{ item.username }}/zsh-installer.sh"
+    state: absent
+  when: omz_install_script_url is defined
+  with_items: "{{ vnc_users }}"
+
+- name: Create per-user $HOME/.zshrc files
+  ansible.builtin.template:
+    src: zshrc.j2
+    dest: "/home/{{ item.username }}/.zshrc"
+    mode: 0744
+    owner: "{{ item.username }}"
+    group: "{{ item.usergroup | default(item.username) }}"
+  with_items: "{{ vnc_users }}"
 # END TODO
+
+- name: Create docker-entrypoint.sh
+  ansible.builtin.template:
+    src: docker-entrypoint.sh.j2
+    dest: "/run/docker-entrypoint.sh"
+    mode: 0755
