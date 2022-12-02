@@ -21,6 +21,7 @@ func init() {
 // InstallDeps Installs project dependencies
 func InstallDeps() error {
 	fmt.Println(color.YellowString("Installing dependencies."))
+	utils.Cd("magefiles")
 
 	if err := utils.Tidy(); err != nil {
 		return fmt.Errorf(color.RedString(
