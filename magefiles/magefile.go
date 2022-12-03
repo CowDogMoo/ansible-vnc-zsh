@@ -77,6 +77,20 @@ func runCmds(cmds []string) error {
 
 }
 
+// LintAnsible runs ansible-lint.
+func LintAnsible() error {
+	cmds := []string{
+		"ansible-lint",
+	}
+
+	fmt.Println(color.YellowString("Running ansible-lint."))
+	if err := runCmds(cmds); err != nil {
+		return fmt.Errorf(color.RedString("failed to run ansible-lint: %v", err))
+	}
+
+	return nil
+}
+
 // RunMoleculeTests runs the molecule tests.
 func RunMoleculeTests() error {
 	cmds := []string{
