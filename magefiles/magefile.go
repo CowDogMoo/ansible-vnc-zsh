@@ -82,6 +82,7 @@ func RunMoleculeTests() error {
 	cmds := []string{
 		"molecule create",
 		"molecule converge",
+		"molecule idempotence",
 		"molecule destroy",
 	}
 
