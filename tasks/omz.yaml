@@ -11,8 +11,8 @@
 
 - name: Install oh-my-zsh for all vnc_users
   ansible.builtin.command: "bash /home/{{ item.username }}/zsh-installer.sh"
-  # Run even in check mode, otherwise the playbook fails with --check.
-  check_mode: no
+  args:
+    creates: "/home/{{ item.username }}/.oh-my-zsh"
   changed_when: false
   become: true
   become_user: "{{ item.username }}"
@@ -22,6 +22,7 @@
   ansible.builtin.file:
     path: "/home/{{ item.username }}/zsh-installer.sh"
     state: absent
+  changed_when: false
   with_items: "{{ vnc_users }}"
 
 - name: Create per-user $HOME/.zshrc files
