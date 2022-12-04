@@ -131,6 +131,7 @@ To test changes made to this role, run the following commands:
 ```bash
 molecule create
 molecule converge
+molecule idempotence
 # If everything passed, tear down the docker container spawned by molecule:
 molecule destroy
 ```
