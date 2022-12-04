@@ -54,9 +54,9 @@ jobs:
         uses: browniebroke/pre-commit-autoupdate-action@main
 
       - name: Create Pull Request with updates
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v4.2.3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.BOT_TOKEN }}
           base: ${{ github.head_ref }}
           branch: update/pre-commit-hooks
           title: Update pre-commit hooks
