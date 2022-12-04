@@ -1,9 +1,10 @@
-# Ansible Role: vnc
+# Ansible Role: vnc + oh-my-zsh
 
 [![Pre-Commit](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/pre-commit.yaml)
 [![Molecule Test](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/molecule.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/molecule.yaml)
 
-This role installs [vnc](https://github.com/cowdogmoo/vnc) on Linux hosts.
+This role installs [vnc](https://github.com/cowdogmoo/vnc) and
+[oh-my-zsh](https://ohmyz.sh/) on Ubuntu hosts.
 
 ## Requirements
 
@@ -27,10 +28,16 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) on Linux hosts.
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Path to python3 interpreter.
+Path to `python3` interpreter.
 
 ```yaml
 ansible_python_interpreter: /usr/bin/python3
+```
+
+Path to clone [vncpwd](https://github.com/jeroennijhof/vncpwd).
+
+```yaml
+vncpwd_clone_path: /tmp/vncpwd
 ```
 
 URL for the oh-my-zsh install script.
@@ -39,11 +46,39 @@ URL for the oh-my-zsh install script.
 omz_install_script_url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh"
 ```
 
+URL to clone [vncpwd](https://github.com/jeroennijhof/vncpwd) from.
+
+```yaml
+vncpwd_repo_url: https://github.com/jeroennijhof/vncpwd.git
+```
+
+Location on disk to install vncpwd.
+
+```yaml
+vncpwd_path: /usr/local/bin/vncpwd
+```
+
 Client options for `vnc`.
 
 ```yaml
 vnc_client_options: "-geometry 1920x1080 --localhost no"
 ```
+
+Specify whether to setup a systemd service to manage
+the vnc installation. Worth considering if you are
+using this role outside of a container.
+
+```yaml
+setup_systemd: false
+```
+
+Oh-my-zsh theme to install.
+
+```yaml
+zsh_theme: "af-magic"
+```
+
+**Debian-specific vars:**
 
 Users to configure `vnc` for.
 
@@ -54,6 +89,17 @@ vnc_users:
     sudo: true
     # port 5901
     vnc_num: 1
+```
+
+Required packages for the installation.
+
+```yaml:
+install_packages:
+  - bash
+  - ca-certificates
+  - curl
+  - dbus-x11
+...
 ```
 
 ## Dependencies

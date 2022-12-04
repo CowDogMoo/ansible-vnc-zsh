@@ -57,7 +57,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4.2.3
         with:
           token: ${{ secrets.BOT_TOKEN }}
-          base: ${{ github.head_ref }}
+          base: main
           branch: update/pre-commit-hooks
           title: Update pre-commit hooks
           commit-message: "chore: update pre-commit hooks"

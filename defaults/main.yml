@@ -1,9 +1,9 @@
 ---
 ansible_python_interpreter: /usr/bin/python3
-clone_path: /tmp/vncpwd
+vncpwd_clone_path: /tmp/vncpwd
 omz_install_script_url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh"
-repo_url: https://github.com/jeroennijhof/vncpwd.git
-tool_path: /usr/local/bin/vncpwd
+vncpwd_repo_url: https://github.com/jeroennijhof/vncpwd.git
+vncpwd_path: /usr/local/bin/vncpwd
 vnc_client_options: "-geometry 1920x1080 --localhost no"
 setup_systemd: false
 zsh_theme: "af-magic"
