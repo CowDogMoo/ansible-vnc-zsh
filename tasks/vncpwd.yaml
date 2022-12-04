@@ -15,7 +15,7 @@
     src: "{{ clone_path }}/vncpwd"
     dest: "{{ tool_path }}"
     mode: 0755
-    remote_src: yes
+    remote_src: true
     owner: root
     group: root
 

@@ -30,7 +30,7 @@
 - name: Get uids of {{ vnc_users }}
   ansible.builtin.command: "id -u {{ item.username }}"
   # Run even in check mode, otherwise the playbook fails with --check.
-  check_mode: no
+  check_mode: false
   changed_when: false
   register: uids
   with_items: "{{ vnc_users }}"
@@ -52,8 +52,8 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   ansible.builtin.systemd:
-    daemon_reload: yes
-    enabled: yes
+    daemon_reload: true
+    enabled: true
     name: vncserver.service
     scope: user
     state: started

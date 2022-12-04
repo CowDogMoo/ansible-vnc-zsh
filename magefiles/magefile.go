@@ -80,7 +80,7 @@ func runCmds(cmds []string) error {
 // LintAnsible runs ansible-lint.
 func LintAnsible() error {
 	cmds := []string{
-		"ansible-lint",
+		"ansible-lint --force-color -c .hooks/linters/.ansible-lint",
 	}
 
 	fmt.Println(color.YellowString("Running ansible-lint."))

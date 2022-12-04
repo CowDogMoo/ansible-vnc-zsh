@@ -2,7 +2,9 @@
 galaxy_info:
   author: Jayson Grace
   namespace: cowdogmoo
-  description: Virtual Network Computing (VNC) is a remote display system which allows you to view and interact with a virtual desktop environment that is running on another computer on the network.
+  description: |
+    Virtual Network Computing (VNC) is a remote display system which allows you to view
+    and interact with a virtual desktop environment that is running on another computer on the network.
   company: CowDogMoo
   license: MIT
   role_name: vnc

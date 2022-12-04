@@ -6,7 +6,7 @@
   ansible.builtin.include_tasks: "{{ ansible_os_family }}.yaml"
 
 - name: Install vncpwd
-  include: vncpwd.yaml
+  ansible.builtin.import_tasks: vncpwd.yaml
 
 - name: Create {{ vnc_users }}
   become: true
@@ -15,7 +15,7 @@
     shell: /bin/zsh
   with_items: "{{ vnc_users }}"
 
-- name: Give applicable {{ vnc_users }} sudoers access
+- name: Give applicable vnc_users sudoers access
   become: true
   ansible.builtin.blockinfile:
     path: /etc/sudoers
@@ -35,17 +35,17 @@
   changed_when: false
   with_items: "{{ vnc_users }}"
 
-- name: Generate random passwords for each user in {{ vnc_users }} with vnc_pw.py
+- name: Generate random passwords for vnc_users with vnc_pw.py
   vnc_pw:
     vnc_users: "{{ vnc_users }}"
   register: updated_data
 
-- name: Update {{ vnc_users }} with the random generated passwords
+- name: Update vnc_users with the random generated passwords
   ansible.builtin.set_fact:
     vnc_users_pw: "{{ vnc_users_pw | default([]) + [item] }}"
   with_items: "{{ updated_data.result }}"
 
-- name: Set random password for {{ vnc_users_pw }} if one isn't already set
+- name: Set random passwords for vnc_users (if one isn't already set)
   ansible.builtin.shell: |
     set -o pipefail
     if [[ ! -f /home/{{ item.username }}/.vnc/passwd ]]; then
@@ -68,11 +68,11 @@
   with_items: "{{ vnc_users }}"
 
 - name: Configure systemd auto-start service
-  include: systemd.yaml
+  ansible.builtin.import_tasks: systemd.yaml
   when: setup_systemd|bool
 
 - name: Install omz for vnc_users
-  include: omz.yaml
+  ansible.builtin.import_tasks: omz.yaml
   when: omz_install_script_url is defined
 
 - name: Create docker-entrypoint.sh
