@@ -135,39 +135,12 @@ molecule converge
 molecule destroy
 ```
 
-## Build docker image with Packer
-
-```bash
-# Without systemd
-IMAGE_TAG=cowdogmoo/ansible-vnc \
-BASE_IMAGE_VERSION=latest \
-NEW_IMAGE_VERSION=latest \
-packer build packer/ubuntu-vnc.pkr.hcl
-
-# With systemd
-IMAGE_TAG=cowdogmoo/ansible-systemd-vnc \
-BASE_IMAGE_VERSION=latest \
-NEW_IMAGE_VERSION=latest \
-packer build packer/ubuntu-systemd-vnc.pkr.hcl
-```
-
-## Run container
-
-```bash
-# Without systemd
-docker run -dit --rm -p 5901:5901 cowdogmoo/ansible-vnc \
-&& CONTAINER=$(docker ps | awk -F '  ' '{print $7}' | xargs) \
-&& echo $CONTAINER && docker exec -it $CONTAINER zsh
-
-# With systemd
-docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
-  --rm -it -p 5901:5901 --cgroupns=host cowdogmoo/ansible-systemd-vnc \
-&& CONTAINER=$(docker ps | awk -F '  ' '{print $7}' | xargs) \
-&& echo $CONTAINER && docker exec -it $CONTAINER zsh
-```
-
 ## Get vnc password
 
+A random 8-character password is generated each time the
+role is executed. To retrieve it, run this command on the
+provisioned system:
+
 ```bash
-docker exec -it $CONTAINER zsh -c '/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd'
+/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd
 ```
