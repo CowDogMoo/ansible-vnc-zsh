@@ -43,6 +43,7 @@ repos:
     hooks:
       - id: ansible-lint
         entry: ansible-lint --force-color -c .hooks/linters/.ansible-lint
+        files: \.(yaml|yml)$
         language: python
         # do not pass files to ansible-lint, see:
         # https://github.com/ansible-community/ansible-lint/issues/611
