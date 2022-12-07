@@ -1,5 +1,5 @@
 ---
-- name: Ubuntu VNC Workstation Provisioner
+- name: Example playbook
   hosts: all
   environment:
     DEBIAN_FRONTEND: noninteractive

@@ -109,7 +109,11 @@ None.
 ## Example Playbook
 
 ```yaml
-- hosts: all
+---
+- name: Ubuntu VNC Workstation Provisioner
+  hosts: all
+  environment:
+    DEBIAN_FRONTEND: noninteractive
   roles:
     - role: cowdogmoo.vnc
 ```
