@@ -39,13 +39,13 @@ jobs:
           go install github.com/magefile/mage@latest
 
       - name: Install brew dependencies
-        run: |
-          brew install pre-commit
-          brew install shellcheck
+        run: brew install pre-commit shellcheck
+
+      - name: Install collection dependencies
+        run: ansible-galaxy collection install -r requirements.yaml
 
       - name: Run go mod tidy - necessary to avoid errors with dependabot PRs
-        run: |
-          pushd magefiles; go mod tidy; popd
+        run: pushd magefiles; go mod tidy; popd
 
       - name: Install pre-commit dependencies
         run: mage installDeps
