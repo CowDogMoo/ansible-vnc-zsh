@@ -24,6 +24,8 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) and
   ansible-galaxy install collections -r requirements.yaml
   ```
 
+---
+
 ## Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
@@ -102,9 +104,13 @@ install_packages:
 ...
 ```
 
+---
+
 ## Dependencies
 
 None.
+
+---
 
 ## Example Playbook
 
@@ -118,6 +124,8 @@ None.
     - role: cowdogmoo.vnc
 ```
 
+---
+
 ## Local Development
 
 Make sure to run the following to develop locally:
@@ -127,6 +135,20 @@ ansible-galaxy collection install -r requirements.yml
 PATH_TO_ROLE="${PWD}"
 ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc"
 ```
+
+---
+
+## Get vnc password
+
+A random 8-character password is generated when the role
+is run initially. To retrieve it, run this command on the
+provisioned system:
+
+```bash
+/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd
+```
+
+---
 
 ## Testing
 
@@ -138,14 +160,4 @@ molecule converge
 molecule idempotence
 # If everything passed, tear down the docker container spawned by molecule:
 molecule destroy
-```
-
-## Get vnc password
-
-A random 8-character password is generated when the role
-is run initially. To retrieve it, run this command on the
-provisioned system:
-
-```bash
-/usr/local/bin/vncpwd /home/ubuntu/.vnc/passwd
 ```
