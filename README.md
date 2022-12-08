@@ -2,6 +2,7 @@
 
 [![Pre-Commit](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/pre-commit.yaml)
 [![Molecule Test](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/molecule.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/molecule.yaml)
+[![License](https://img.shields.io/github/license/CowDogMoo/ansible-vnc-zsh?label=License&style=flat&color=blue&logo=github)](https://github.com/CowDogMoo/ansible-vnc-zsh/blob/main/LICENSE)
 
 This role installs [vnc](https://github.com/cowdogmoo/vnc) and
 [oh-my-zsh](https://ohmyz.sh/) on Ubuntu hosts.
