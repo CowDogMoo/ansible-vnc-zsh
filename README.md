@@ -28,7 +28,7 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) and
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Path to `python3` interpreter.
+Path to `python3` interpreter on the target system.
 
 ```yaml
 ansible_python_interpreter: /usr/bin/python3
@@ -142,8 +142,8 @@ molecule destroy
 
 ## Get vnc password
 
-A random 8-character password is generated each time the
-role is executed. To retrieve it, run this command on the
+A random 8-character password is generated when the role
+is run initially. To retrieve it, run this command on the
 provisioned system:
 
 ```bash
