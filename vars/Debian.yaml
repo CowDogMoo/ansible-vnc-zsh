@@ -9,6 +9,7 @@ vnc_users:
 install_packages:
   - bash
   - ca-certificates
+  - colordiff
   - curl
   - dbus-x11
   - fonts-powerline
