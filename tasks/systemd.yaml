@@ -1,6 +1,6 @@
 ---
 - name: Enable persistent services for all users
-  ansible.builtin.shell: /bin/loginctl enable-linger {{ item.username }} # noqa 301 305
+  ansible.builtin.shell: /bin/loginctl enable-linger {{ item.username }}
   changed_when: false
   with_items: "{{ vnc_users }}"
 
