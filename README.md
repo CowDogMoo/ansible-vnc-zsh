@@ -122,7 +122,7 @@ None.
   environment:
     DEBIAN_FRONTEND: noninteractive
   roles:
-    - role: cowdogmoo.vnc
+    - role: cowdogmoo.vnc_zsh
 ```
 
 ---
@@ -134,7 +134,7 @@ Make sure to run the following to develop locally:
 ```bash
 ansible-galaxy collection install -r requirements.yml
 PATH_TO_ROLE="${PWD}"
-ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc"
+ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc_zsh"
 ```
 
 ---

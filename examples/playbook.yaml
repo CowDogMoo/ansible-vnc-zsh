@@ -4,4 +4,4 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
   roles:
-    - role: cowdogmoo.vnc
+    - role: cowdogmoo.vnc_zsh

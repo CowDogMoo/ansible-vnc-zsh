@@ -19,11 +19,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          path: "cowdogmoo.ansible-vnc-zsh"
+          path: "cowdogmoo.vnc_zsh"
 
       - name: Add role to ansible galaxy
         uses: robertdebock/galaxy-action@1.2.1
         with:
           galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
           git_branch: main
-          path: "cowdogmoo.ansible-vnc-zsh"
+          path: "cowdogmoo.vnc_zsh"

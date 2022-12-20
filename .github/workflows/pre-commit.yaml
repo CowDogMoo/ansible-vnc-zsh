@@ -8,10 +8,6 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
-env:
-  ROLE: ansible-vnc
-  DEPLOYED_ROLE: cowdogmoo.vnc
-
 jobs:
   pre-commit:
     name: Update pre-commit hooks and run pre-commit
@@ -39,7 +35,7 @@ jobs:
           go install github.com/magefile/mage@latest
 
       - name: Install brew dependencies
-        run: brew install pre-commit shellcheck
+        run: brew install shellcheck
 
       - name: Install collection dependencies
         run: ansible-galaxy collection install -r requirements.yaml
@@ -50,15 +46,15 @@ jobs:
       - name: Install pre-commit dependencies
         run: mage installDeps
 
-      - name: Run pre-commit autoupdate action
-        uses: browniebroke/pre-commit-autoupdate-action@main
+      # - name: Run pre-commit autoupdate action
+      #   uses: browniebroke/pre-commit-autoupdate-action@main
 
-      - name: Create Pull Request with updates
-        uses: peter-evans/create-pull-request@v4.2.3
-        with:
-          token: ${{ secrets.BOT_TOKEN }}
-          base: main
-          branch: update/pre-commit-hooks
-          title: Update pre-commit hooks
-          commit-message: "chore: update pre-commit hooks"
-          body: Update versions of pre-commit hooks to latest version.
+      # - name: Create Pull Request with updates
+      #   uses: peter-evans/create-pull-request@v4.2.3
+      #   with:
+      #     token: ${{ secrets.BOT_TOKEN }}
+      #     base: main
+      #     branch: update/pre-commit-hooks
+      #     title: Update pre-commit hooks
+      #     commit-message: "chore: update pre-commit hooks"
+      #     body: Update versions of pre-commit hooks to latest version.
