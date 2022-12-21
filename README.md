@@ -14,15 +14,17 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) and
   Install with:
 
   ```bash
-  python3.9 -m pip install --upgrade molecule-docker
+  python3 -m pip install --upgrade molecule-docker
   ```
 
-- `community.general.make`
+- Ansible Galaxy Collections and Roles
+
+  - `darkwizard242.googlechrome`
 
   Install with:
 
   ```bash
-  ansible-galaxy install collections -r requirements.yaml
+  ansible-galaxy install -r requirements.yaml
   ```
 
 ---

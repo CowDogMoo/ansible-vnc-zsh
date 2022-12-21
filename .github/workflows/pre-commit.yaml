@@ -37,8 +37,10 @@ jobs:
       - name: Install brew dependencies
         run: brew install shellcheck
 
-      - name: Install collection dependencies
-        run: ansible-galaxy collection install -r requirements.yaml
+      - name: Install galaxy roles and collections
+        run: |
+          ansible-galaxy collection install -r requirements.yaml
+          ansible-galaxy install -r requirements.yaml
 
       - name: Run go mod tidy - necessary to avoid errors with dependabot PRs
         run: pushd magefiles; go mod tidy; popd
