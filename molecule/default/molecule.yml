@@ -10,7 +10,7 @@ driver:
   name: docker
 
 platforms:
-  - name: ubuntu-vnc
+  - name: ubuntu-vnc-zsh
     image: "geerlingguy/docker-ubuntu2204-ansible:latest"
     command: ""
     volumes:
