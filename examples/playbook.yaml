@@ -1,8 +1,9 @@
 ---
 - name: Example playbook
   hosts: all
+  become: true
   environment:
     DEBIAN_FRONTEND: noninteractive
   roles:
-    - role: darkwizard242.googlechrome
+    - role: marverix.chromium
     - role: cowdogmoo.vnc_zsh

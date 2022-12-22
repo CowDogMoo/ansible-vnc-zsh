@@ -19,7 +19,7 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) and
 
 - Ansible Galaxy Collections and Roles
 
-  - `darkwizard242.googlechrome`
+  - `marverix.chromium`
 
   Install with:
 
