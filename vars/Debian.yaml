@@ -12,6 +12,7 @@ install_packages:
   - colordiff
   - curl
   - dbus-x11
+  - file
   - fonts-powerline
   - git
   - golang-go
@@ -20,6 +21,7 @@ install_packages:
   - locales
   - net-tools
   - rsync
+  - software-properties-common
   - sudo
   - terminator
   - tigervnc-standalone-server
