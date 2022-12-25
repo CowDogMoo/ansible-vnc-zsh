@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
   options:
-    # Install required collections
+    # Install required galaxy dependencies
     requirements-file: ../../requirements.yaml
 
 # Run molecule inside of a docker container
