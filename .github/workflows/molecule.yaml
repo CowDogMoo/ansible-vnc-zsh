@@ -22,10 +22,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.10"
+          python-version: "3.x"
 
       - name: Install dependencies
         run: pip3 install ansible molecule[docker] docker
+
+      - name: Install galaxy dependencies
+        run: ansible-galaxy install -r requirements.yaml
 
       - name: Test role with molecule
         run: molecule test
