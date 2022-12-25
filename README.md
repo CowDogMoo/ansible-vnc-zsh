@@ -1,10 +1,11 @@
 # Ansible Role: vnc + oh-my-zsh
 
-[![Pre-Commit](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/pre-commit.yaml)
-[![Molecule Test](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/molecule.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc/actions/workflows/molecule.yaml)
+[![Pre-Commit](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/pre-commit.yaml)
+[![Molecule Test](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/molecule.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/molecule.yaml)
+[![Ansible Galaxy](https://img.shields.io/badge/Galaxy-cowdogmoo.vnc_zsh-660198.svg?style=flat)](https://galaxy.ansible.com/cowdogmoo/vnc_zsh)
 [![License](https://img.shields.io/github/license/CowDogMoo/ansible-vnc-zsh?label=License&style=flat&color=blue&logo=github)](https://github.com/CowDogMoo/ansible-vnc-zsh/blob/main/LICENSE)
 
-This role installs [vnc](https://github.com/cowdogmoo/vnc) and
+This role installs [vnc](https://tigervnc.org/) and
 [oh-my-zsh](https://ohmyz.sh/) on Ubuntu hosts.
 
 ## Requirements
@@ -19,7 +20,7 @@ This role installs [vnc](https://github.com/cowdogmoo/vnc) and
 
 - Ansible Galaxy Collections and Roles
 
-  - `marverix.chromium`
+  - `cowdogmoo.firefox`
 
   Install with:
 
@@ -102,16 +103,10 @@ Required packages for the installation.
 install_packages:
   - bash
   - ca-certificates
+  - colordiff
   - curl
-  - dbus-x11
 ...
 ```
-
----
-
-## Dependencies
-
-None.
 
 ---
 
@@ -119,11 +114,13 @@ None.
 
 ```yaml
 ---
-- name: Ubuntu VNC Workstation Provisioner
+- name: Example playbook
   hosts: all
+  become: true
   environment:
     DEBIAN_FRONTEND: noninteractive
   roles:
+    - role: cowdogmoo.firefox
     - role: cowdogmoo.vnc_zsh
 ```
 
