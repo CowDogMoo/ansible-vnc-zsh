@@ -6,3 +6,10 @@
     update_cache: true
   environment:
     DEBIAN_FRONTEND: noninteractive
+
+- name: Cleanup packages.
+  ansible.builtin.apt:
+    name: "{{ cleanup_packages }}"
+    state: absent
+  environment:
+    DEBIAN_FRONTEND: noninteractive

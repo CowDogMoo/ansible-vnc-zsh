@@ -6,6 +6,9 @@ vnc_users:
     # port 5901
     vnc_num: 1
 
+cleanup_packages:
+  - xfce4-power-manager
+
 install_packages:
   - bash
   - ca-certificates
