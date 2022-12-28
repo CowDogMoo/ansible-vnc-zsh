@@ -32,7 +32,7 @@ This role installs [vnc](https://tigervnc.org/) and
 
 ## Role Variables
 
-Available variables are listed below, along with default values (see `defaults/main.yml`):
+Available variables are listed below, along with default values (see `defaults/main.yaml`):
 
 Path to `python3` interpreter on the target system.
 
@@ -131,7 +131,7 @@ install_packages:
 Make sure to run the following to develop locally:
 
 ```bash
-ansible-galaxy collection install -r requirements.yml
+ansible-galaxy install -r requirements.yaml
 PATH_TO_ROLE="${PWD}"
 ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc_zsh"
 ```
