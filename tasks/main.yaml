@@ -8,6 +8,11 @@
 - name: Install vncpwd
   ansible.builtin.import_tasks: vncpwd.yaml
 
+- name: Set default_username
+  ansible.builtin.set_fact:
+    default_username: "kali"
+  when: ansible_distribution_release == "kali-rolling"
+
 - name: Create {{ vnc_users }}
   become: true
   ansible.builtin.user:

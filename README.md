@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/github/license/CowDogMoo/ansible-vnc-zsh?label=License&style=flat&color=blue&logo=github)](https://github.com/CowDogMoo/ansible-vnc-zsh/blob/main/LICENSE)
 
 This role installs [vnc](https://tigervnc.org/) and
-[oh-my-zsh](https://ohmyz.sh/) on Ubuntu hosts.
+[oh-my-zsh](https://ohmyz.sh/) on Debian-based systems.
 
 ## Requirements
 

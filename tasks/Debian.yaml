@@ -1,5 +1,6 @@
 ---
 - name: Ensure dependencies are installed.
+  become: true
   ansible.builtin.apt:
     name: "{{ install_packages }}"
     state: present
@@ -8,6 +9,7 @@
     DEBIAN_FRONTEND: noninteractive
 
 - name: Cleanup packages.
+  become: true
   ansible.builtin.apt:
     name: "{{ cleanup_packages }}"
     state: absent

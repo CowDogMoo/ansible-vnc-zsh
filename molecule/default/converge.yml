@@ -2,20 +2,7 @@
 - name: Converge
   hosts: all
 
-  vars:
-    vnc_users:
-      - username: "ubuntu"
-        usergroup: "ubuntu"
-        # port 5901
-        vnc_num: 1
-      - username: "runner"
-        usergroup: "runner"
-        # port 5902
-        vnc_num: 2
-    setup_systemd: true
-
   roles:
-    - role: cowdogmoo.firefox
     - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
 
   post_tasks:

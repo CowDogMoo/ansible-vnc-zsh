@@ -1,10 +1,16 @@
 ---
 vnc_users:
-  - username: "ubuntu"
-    usergroup: "ubuntu"
+  # Set to the os family
+  # i.e. ubuntu for ubuntu
+  # debian for debian
+  # etc.
+  - username: "{{ default_username }}"
+    usergroup: "{{ default_username }}"
     sudo: true
     # port 5901
     vnc_num: 1
+
+default_username: "{{ ansible_os_family | lower }}"
 
 cleanup_packages:
   - xfce4-power-manager
