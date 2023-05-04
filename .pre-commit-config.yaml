@@ -10,13 +10,13 @@ repos:
       - id: check-added-large-files
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.28.0
+    rev: v1.31.0
     hooks:
       - id: yamllint
         entry: yamllint --strict -c .hooks/linters/.yaml-lint.yaml
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0-alpha.4
+    rev: v3.0.0-alpha.9-for-vscode
     hooks:
       - id: prettier
         files: \.(json|md|yaml|yml)$
@@ -33,13 +33,13 @@ repos:
       - id: markdownlint
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.2
+    rev: v2.2.4
     hooks:
       - id: codespell
         entry: codespell -q 3 -f --skip=".git,.github" README.md
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v6.0.2
+    rev: v6.15.0
     hooks:
       - id: ansible-lint
         entry: ansible-lint -v --force-color -c .hooks/linters/.ansible-lint

@@ -5,5 +5,6 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
   roles:
-    - role: cowdogmoo.firefox
     - role: cowdogmoo.vnc_zsh
+    - role: l50.sliver
+    - role: cowdogmoo.firefox
