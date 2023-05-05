@@ -10,7 +10,7 @@ vnc_users:
     # port 5901
     vnc_num: 1
 
-default_username: "{{ ansible_os_family | lower }}"
+default_username: "{{ ansible_distribution | lower }}"
 
 cleanup_packages:
   - xfce4-power-manager
