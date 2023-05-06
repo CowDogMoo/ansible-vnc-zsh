@@ -14,6 +14,7 @@ area/ansible:
   - "meta/**/*.yaml"
   - "templates/**/*.j2"
   - "files/**/*"
+  - "requirements.yaml"
 
 area/go:
-  - "*.go"
+  - "magefiles/*"
