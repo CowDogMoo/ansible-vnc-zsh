@@ -31,6 +31,8 @@ jobs:
 
       - name: Install go module dependencies
         run: |
+          export GOPATH=$HOME/go
+          export PATH=$PATH:$GOPATH/bin
           go install mvdan.cc/sh/v3/cmd/shfmt@latest
           go install github.com/magefile/mage@latest
 
