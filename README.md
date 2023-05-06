@@ -152,7 +152,17 @@ provisioned system:
 
 ## Testing
 
-To test changes made to this role, run the following commands:
+To test actions locally, you can install [act](https://github.com/nektos/act)
+and use the following command:
+
+```bash
+ACTION="molecule"
+if [[ $(uname) == "Darwin" ]]; then
+  act -j $ACTION --container-architecture linux/amd64
+fi
+```
+
+To test changes made to this role locally, run the following commands:
 
 ```bash
 molecule create

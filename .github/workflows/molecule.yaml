@@ -20,12 +20,12 @@ jobs:
           path: "cowdogmoo.vnc_zsh"
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
       - name: Install dependencies
-        run: pip3 install --pre ansible docker molecule
+        run: pip3 install ansible molecule[docker] docker
 
       - name: Install galaxy dependencies
         run: ansible-galaxy install -r requirements.yaml
@@ -35,4 +35,4 @@ jobs:
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
-          MOLECULE_DISTRO: ubuntu2004
+          MOLECULE_DISTRO: geerlingguy/docker-ubuntu2204-ansible
