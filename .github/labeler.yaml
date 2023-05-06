@@ -1,0 +1,19 @@
+---
+area/github:
+  - ".github/**/*"
+
+area/pre-commit:
+  - ".pre-commit-config.yaml"
+  - ".hooks/**/*"
+
+area/ansible:
+  - "tasks/**/*.yaml"
+  - "handlers/**/*.yaml"
+  - "vars/**/*.yaml"
+  - "defaults/**/*.yaml"
+  - "meta/**/*.yaml"
+  - "templates/**/*.j2"
+  - "files/**/*"
+
+area/go:
+  - "*.go"
