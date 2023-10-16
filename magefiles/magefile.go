@@ -8,58 +8,75 @@ import (
 
 	"github.com/bitfield/script"
 	"github.com/fatih/color"
-	utils "github.com/l50/goutils"
-
-	// mage utility functions
-	"github.com/magefile/mage/mg"
+	"github.com/l50/goutils/v2/dev/lint"
+	mageutils "github.com/l50/goutils/v2/dev/mage"
 )
 
 func init() {
 	os.Setenv("GO111MODULE", "on")
 }
 
-// InstallDeps Installs project dependencies
+// InstallDeps installs the Go dependencies necessary for developing
+// on the project.
+//
+// Example usage:
+//
+// ```go
+// mage installdeps
+// ```
+//
+// **Returns:**
+//
+// error: An error if any issue occurs while trying to
+// install the dependencies.
 func InstallDeps() error {
-	fmt.Println(color.YellowString("Installing dependencies."))
-	utils.Cd("magefiles")
+	fmt.Println("Installing dependencies.")
 
-	if err := utils.Tidy(); err != nil {
-		return fmt.Errorf(color.RedString(
-			"failed to install dependencies: %v", err))
+	if err := mageutils.Tidy(); err != nil {
+		return fmt.Errorf("failed to install dependencies: %v", err)
+	}
+
+	if err := lint.InstallGoPCDeps(); err != nil {
+		return fmt.Errorf("failed to install pre-commit dependencies: %v", err)
+	}
+
+	if err := mageutils.InstallVSCodeModules(); err != nil {
+		return fmt.Errorf("failed to install vscode-go modules: %v", err)
 	}
 
 	return nil
 }
 
-// InstallPreCommitHooks Installs pre-commit hooks locally
-func InstallPreCommitHooks() error {
-	mg.Deps(InstallDeps)
-
-	fmt.Println(color.YellowString("Installing pre-commit hooks."))
-	if err := utils.InstallPCHooks(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// RunPreCommit runs all pre-commit hooks locally
+// RunPreCommit updates, clears, and executes all pre-commit hooks
+// locally. The function follows a three-step process:
+//
+// First, it updates the pre-commit hooks.
+// Next, it clears the pre-commit cache to ensure a clean environment.
+// Lastly, it executes all pre-commit hooks locally.
+//
+// Example usage:
+//
+// ```go
+// mage runprecommit
+// ```
+//
+// **Returns:**
+//
+// error: An error if any issue occurs at any of the three stages
+// of the process.
 func RunPreCommit() error {
-	mg.Deps(InstallDeps)
-
-	fmt.Println(color.YellowString("Updating pre-commit hooks."))
-	if err := utils.UpdatePCHooks(); err != nil {
+	fmt.Println("Updating pre-commit hooks.")
+	if err := lint.UpdatePCHooks(); err != nil {
 		return err
 	}
 
-	fmt.Println(color.YellowString(
-		"Clearing the pre-commit cache to ensure we have a fresh start."))
-	if err := utils.ClearPCCache(); err != nil {
+	fmt.Println("Clearing the pre-commit cache to ensure we have a fresh start.")
+	if err := lint.ClearPCCache(); err != nil {
 		return err
 	}
 
-	fmt.Println(color.YellowString("Running all pre-commit hooks locally."))
-	if err := utils.RunPCHooks(); err != nil {
+	fmt.Println("Running all pre-commit hooks locally.")
+	if err := lint.RunPCHooks(); err != nil {
 		return err
 	}
 
@@ -77,7 +94,17 @@ func runCmds(cmds []string) error {
 
 }
 
-// LintAnsible runs ansible-lint.
+// LintAnsible runs the ansible-lint linter.
+//
+// Example usage:
+//
+// ```bash
+// mage lintansible
+// ```
+//
+// **Returns:**
+//
+// error: An error if any issue occurs while trying to run the linter.
 func LintAnsible() error {
 	cmds := []string{
 		"ansible-lint --force-color -c .hooks/linters/.ansible-lint",
@@ -92,12 +119,19 @@ func LintAnsible() error {
 }
 
 // RunMoleculeTests runs the molecule tests.
+//
+// Example usage:
+//
+// ```bash
+// mage runmoleculetests
+// ```
+//
+// **Returns:**
+//
+// error: An error if any issue occurs while trying to run the tests.
 func RunMoleculeTests() error {
 	cmds := []string{
-		"molecule create",
-		"molecule converge",
-		"molecule idempotence",
-		"molecule destroy",
+		"molecule test",
 	}
 
 	fmt.Println(color.YellowString("Running molecule tests."))
