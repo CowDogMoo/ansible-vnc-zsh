@@ -15,17 +15,11 @@ This role installs [vnc](https://tigervnc.org/) and
   Install with:
 
   ```bash
-  python3 -m pip install --upgrade molecule-docker
-  ```
-
-- Ansible Galaxy Collections and Roles
-
-  - `cowdogmoo.firefox`
-
-  Install with:
-
-  ```bash
-  ansible-galaxy install -r requirements.yaml
+  python3 -m pip install --upgrade \
+    ansible-core \
+    molecule \
+    molecule-docker \
+    "molecule-plugins[docker]"
   ```
 
 ---
@@ -106,22 +100,6 @@ install_packages:
   - colordiff
   - curl
 ...
-```
-
----
-
-## Example Playbook
-
-```yaml
----
-- name: Example playbook
-  hosts: all
-  become: true
-  environment:
-    DEBIAN_FRONTEND: noninteractive
-  roles:
-    - role: cowdogmoo.firefox
-    - role: cowdogmoo.vnc_zsh
 ```
 
 ---
