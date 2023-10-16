@@ -2,7 +2,7 @@
 
 [![Pre-Commit](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/pre-commit.yaml)
 [![Molecule Test](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/molecule.yaml/badge.svg)](https://github.com/cowdogmoo/ansible-vnc-zsh/actions/workflows/molecule.yaml)
-[![Ansible Galaxy](https://img.shields.io/badge/Galaxy-cowdogmoo.vnc_zsh-660198.svg?style=flat)](https://galaxy.ansible.com/cowdogmoo/vnc_zsh)
+[![Ansible Galaxy](https://img.shields.io/badge/Galaxy-cowdogmoo.vnc_zsh-660198.svg?style=flat)](https://galaxy.ansible.com/ui/standalone/roles/CowDogMoo/vnc_zsh)
 [![License](https://img.shields.io/github/license/CowDogMoo/ansible-vnc-zsh?label=License&style=flat&color=blue&logo=github)](https://github.com/CowDogMoo/ansible-vnc-zsh/blob/main/LICENSE)
 
 This role installs [vnc](https://tigervnc.org/) and
