@@ -27,7 +27,7 @@ jobs:
           pip3 install molecule-docker
 
       - name: Install galaxy dependencies
-        run: ansible-galaxy install -r requirements.yaml
+        run: ansible-galaxy install -r requirements.yml
 
       - name: Test role with molecule
         run: molecule test

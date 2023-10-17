@@ -109,7 +109,7 @@ install_packages:
 Make sure to run the following to develop locally:
 
 ```bash
-ansible-galaxy install -r requirements.yaml
+ansible-galaxy install -r requirements.yml
 PATH_TO_ROLE="${PWD}"
 ln -s "${PATH_TO_ROLE}" "${HOME}/.ansible/roles/cowdogmoo.vnc_zsh"
 ```

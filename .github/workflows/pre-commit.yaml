@@ -24,7 +24,7 @@ jobs:
         run: pip3 install ansible ansible-lint docker molecule[docker] pre-commit
 
       - name: Install galaxy dependencies
-        run: ansible-galaxy install -r requirements.yaml
+        run: ansible-galaxy install -r requirements.yml
 
       - name: Set up Go
         uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4
