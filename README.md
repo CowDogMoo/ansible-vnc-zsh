@@ -28,12 +28,6 @@ This role installs [vnc](https://tigervnc.org/) and
 
 Available variables are listed below, along with default values (see `defaults/main.yaml`):
 
-Path to `python3` interpreter on the target system.
-
-```yaml
-ansible_python_interpreter: /usr/bin/python3
-```
-
 Path to clone [vncpwd](https://github.com/jeroennijhof/vncpwd).
 
 ```yaml

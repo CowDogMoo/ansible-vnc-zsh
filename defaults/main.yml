@@ -1,5 +1,4 @@
 ---
-ansible_python_interpreter: /usr/bin/python3
 vncpwd_clone_path: /tmp/vncpwd
 omz_install_script_url: "https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh"
 vncpwd_repo_url: https://github.com/jeroennijhof/vncpwd.git
